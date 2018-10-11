@@ -8,6 +8,10 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<docker.registry.name>robert0714</docker.registry.name>
+		<docker.repository.name>${docker.registry.name}/${project.artifactId}</docker.repository.name>
+		<docker-maven-plugin.version>0.27.2</docker-maven-plugin.version>
+		<docker.image.version>ch08</docker.image.version>
 	</properties>
 
 	<parent>
@@ -34,4 +38,17 @@
 		<module>product-service</module>
 		<module>gateway-service</module>
 	</modules>
+	<build>
+		<plugins>			
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>${docker-maven-plugin.version}</version>
+				<configuration>
+					<skipBuild>true</skipBuild>
+					<skipRun>true</skipRun>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build> 
 </project>

@@ -21,6 +21,50 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>${docker-maven-plugin.version}</version>
+				<configuration>
+					<skipBuild>false</skipBuild>
+					<skipRun>false</skipRun>
+					<images>
+						<image>
+							<name>${docker.repository.name}:${docker.image.version}</name>
+							<alias>${project.artifactId}</alias>
+							<build>
+								<from>library/openjdk:8u181-jdk</from>
+								<maintainer>robert0714</maintainer>
+								<assembly>
+									<descriptor>docker-assembly.xml</descriptor>
+								</assembly>
+								<ports>
+									<port>8080</port>
+								</ports>
+								<cmd>
+									<exec>
+										<arg>java</arg>
+										<arg>-jar</arg>
+										<arg>/maven/${project.build.finalName}.jar</arg>
+										<arg>--java.security.egd=file:/dev/./urandom </arg>
+									</exec>
+								</cmd>
+							</build>
+							<run>
+								<namingStrategy>alias</namingStrategy>
+								<net>host</net>								
+								<log>
+									<prefix>${project.artifactId}</prefix>
+									<color>cyan</color>
+								</log>
+								<env>
+									<TZ>Asia/Taipei</TZ>
+								</env>
+							</run>
+						</image>
+					</images>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
