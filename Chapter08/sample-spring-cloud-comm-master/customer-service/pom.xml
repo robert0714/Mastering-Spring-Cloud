@@ -30,8 +30,7 @@
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>${docker-maven-plugin.version}</version>
 				<configuration>
-					<skipBuild>false</skipBuild>
-					<skipRun>false</skipRun>
+					<skip>false</skip>
 					<images>
 						<image>
 							<name>${docker.repository.name}:${docker.image.version}</name>
