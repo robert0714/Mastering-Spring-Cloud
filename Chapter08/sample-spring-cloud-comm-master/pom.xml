@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pl.piomin.services</groupId>
@@ -39,16 +40,56 @@
 		<module>gateway-service</module>
 	</modules>
 	<build>
-		<plugins>			
+		<plugins>
 			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>${docker-maven-plugin.version}</version>
-				<configuration>
-					<skipBuild>true</skipBuild>
-					<skipRun>true</skipRun>
-				</configuration>
 			</plugin>
 		</plugins>
-	</build> 
+	</build>
+	<profiles>
+		<profile>
+			<activation>
+				<os>
+					<name>windows 10</name>
+					<family>windows</family>
+					<arch>amd64</arch>
+					<version>10.0</version>
+				</os>
+			</activation>
+			<properties>
+				<docker.registry.name></docker.registry.name>
+				<docker.port>8080</docker.port>
+				<docker.version>dev</docker.version>
+				<docker.host.address>192.168.99.100</docker.host.address>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>${docker-maven-plugin.version}</version>
+						<configuration>
+							<machine>
+								<name>default</name>
+								<autoCreate>true</autoCreate>
+								<!-- https://docs.docker.com/machine/reference/create/#accessing-driver-specific-flags-in-the-help-text -->
+								<createOptions>
+									<driver>virtualbox</driver>
+									<virtualbox-cpu-count>2</virtualbox-cpu-count>
+									<virtualbox-memory>2048</virtualbox-memory>
+								</createOptions>
+							</machine>
+							<skip>true</skip>
+							<skipMachine>false</skipMachine>
+							<skipBuild>true</skipBuild>
+							<skipRun>true</skipRun>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+	</profiles>
 </project>
