@@ -1,0 +1,73 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>pl.piomin.services</groupId>
+		<artifactId>sample-spring-cloud-comm-ch9</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>gateway-service-ch9</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-zuul</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>${docker-maven-plugin.version}</version>
+				<configuration>
+					<skip>false</skip>
+					<skipMachine>false</skipMachine>
+					<skipBuild>false</skipBuild>
+					<skipRun>false</skipRun>
+					<images>
+						<image>
+							<name>${docker.repository.name}:${docker.image.version}</name>
+							<alias>${project.artifactId}</alias>
+							<build>
+								<from>library/openjdk:8u181-jdk</from>
+								<maintainer>robert0714</maintainer>
+								<assembly>
+									<descriptor>docker-assembly.xml</descriptor>
+								</assembly>
+								<ports>
+									<port>8080</port>
+								</ports>
+								<cmd>
+									<exec>
+										<arg>java</arg>
+										<arg>-jar</arg>
+										<arg>/maven/${project.build.finalName}.jar</arg>
+										<arg>--java.security.egd=file:/dev/./urandom </arg>
+									</exec>
+								</cmd>
+							</build>
+							<run>
+								<namingStrategy>alias</namingStrategy>
+								<net>host</net>								
+								<log>
+									<prefix>${project.artifactId}</prefix>
+									<color>cyan</color>
+								</log>
+								<env>
+									<TZ>Asia/Taipei</TZ>
+								</env>
+							</run>
+						</image>
+					</images>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

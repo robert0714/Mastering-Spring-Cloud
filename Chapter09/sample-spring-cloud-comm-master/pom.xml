@@ -1,0 +1,113 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>pl.piomin.services</groupId>
+	<artifactId>sample-spring-cloud-comm-ch9</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<docker.registry.name>robert0714</docker.registry.name>
+		<docker.repository.name>${docker.registry.name}/${project.artifactId}</docker.repository.name>
+		<docker-maven-plugin.version>0.27.2</docker-maven-plugin.version>
+		<docker.image.version>ch08</docker.image.version>
+	</properties>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.16.RELEASE</version>
+	</parent>
+	<dependencies>
+        <!-- Sleuth automatically adds trace interceptors when in the classpath -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-sleuth</artifactId>
+        </dependency>
+        <!-- Sends trace data to zipkin over http (defaults to http://localhost:9411/api/v2/spans) -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Edgware.SR4</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<modules>
+		<module>order-service</module>
+		<module>account-service</module>
+		<module>product-service</module>
+		<module>gateway-service</module>
+	</modules>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>${docker-maven-plugin.version}</version>
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+		<profile>
+			<activation>
+				<os>
+					<name>windows 10</name>
+					<family>windows</family>
+					<arch>amd64</arch>
+					<version>10.0</version>
+				</os>
+			</activation>
+			<properties>
+				<docker.registry.name></docker.registry.name>
+				<docker.port>8080</docker.port>
+				<docker.version>dev</docker.version>
+				<docker.host.address>192.168.99.100</docker.host.address>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>${docker-maven-plugin.version}</version>
+						<configuration>
+							<machine>
+								<name>default</name>
+								<autoCreate>true</autoCreate>
+								<!-- https://docs.docker.com/machine/reference/create/#accessing-driver-specific-flags-in-the-help-text -->
+								<createOptions>
+									<driver>virtualbox</driver>
+									<virtualbox-cpu-count>2</virtualbox-cpu-count>
+									<virtualbox-memory>2048</virtualbox-memory>
+								</createOptions>
+							</machine>
+							<skip>true</skip>
+							<skipMachine>false</skipMachine>
+							<skipBuild>true</skipBuild>
+							<skipRun>true</skipRun>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+	</profiles>
+</project>

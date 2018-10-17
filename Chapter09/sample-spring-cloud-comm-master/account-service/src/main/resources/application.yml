@@ -1,0 +1,13 @@
+server:
+  port: 8091
+spring:
+  application:
+    name: account-service
+  zipkin:
+    baseUrl: http://localhost:9411
+    
+logging:
+  level:
+#    org.springframework.web: DEBUG
+    org.springframework.cloud.sleuth: DEBUG
+  

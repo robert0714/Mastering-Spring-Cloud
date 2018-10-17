@@ -1,0 +1,74 @@
+version: '2' 
+services:
+  order:
+     container_name: order-service
+     image:   robert0714/order-service:ch09
+     network_mode:  "host"
+     environment:
+         server.port: "8090"
+         eureka.client.enabled: "false"
+         eureka.client.serviceUrl.defaultZone: http://localhost:8761/eureka 
+         spring.cloud.discovery.enabled: "false"
+         spring.cloud.config.server.encrypt.enabled: "false"
+         TZ: Asia/Taipei
+  account:
+     container_name: account-service
+     image:  robert0714/account-service:ch09
+     network_mode:  "host"
+     environment:
+         server.port: "8091"
+         eureka.client.enabled: "false"
+         eureka.client.serviceUrl.defaultZone: http://localhost:8761/eureka 
+         spring.cloud.discovery.enabled: "false"
+         spring.cloud.config.server.encrypt.enabled: "false"
+         TZ: Asia/Taipei
+  customer:
+     container_name: customer-service
+     image:  robert0714/customer-service:ch09
+     network_mode:  "host"
+     environment:
+         server.port: "8092"
+         eureka.client.enabled: "false"
+         eureka.client.serviceUrl.defaultZone: http://localhost:8761/eureka 
+         spring.cloud.discovery.enabled: "false"
+         spring.cloud.config.server.encrypt.enabled: "false"
+         TZ: Asia/Taipei
+  product:
+     container_name: product-service
+     image:  robert0714/product-service:ch09
+     network_mode:  "host"
+     environment:
+         server.port: "8093"
+         eureka.client.enabled: "false"
+         eureka.client.serviceUrl.defaultZone: http://localhost:8761/eureka 
+         spring.cloud.discovery.enabled: "false"
+         spring.cloud.config.server.encrypt.enabled: "false"
+         TZ: Asia/Taipei
+  gateway:
+     container_name: gateway-service
+     image:  robert0714/gateway-service:ch09
+     network_mode:  "host"
+     environment:
+         server.port: "8080"
+         eureka.client.enabled: "false"
+         eureka.client.serviceUrl.defaultZone: http://localhost:8761/eureka 
+         spring.cloud.discovery.enabled: "false"
+         spring.cloud.config.server.encrypt.enabled: "false"
+         TZ: Asia/Taipei
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    # Environment settings are defined here https://github.com/openzipkin/zipkin/tree/1.19.0/zipkin-server#environment-variables
+    network_mode:  "host"
+    environment:
+      - STORAGE_TYPE=mem
+      - TZ=Asia/Taipei      
+      # Uncomment to disable scribe
+      # - SCRIBE_ENABLED=false
+      # Uncomment to enable self-tracing
+      # - SELF_TRACING_ENABLED=true
+      # Uncomment to enable debug logging
+      # - JAVA_OPTS=-Dlogging.level.zipkin=DEBUG
+    ports:
+      # Port used for the Zipkin UI and HTTP Api
+      - 9411:9411
