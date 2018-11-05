@@ -33,7 +33,7 @@
 					<skip>false</skip>
 					<skipMachine>false</skipMachine>
 					<skipBuild>false</skipBuild>
-					<skipRun>false</skipRun>>
+					<skipRun>false</skipRun>
 					<images>
 						<image>
 							<name>${docker.repository.name}:${docker.image.version}</name>
