@@ -1,14 +1,15 @@
 package pl.piomin.services.customer;
 
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
-import org.springframework.cloud.sleuth.Sampler;
-import org.springframework.cloud.sleuth.sampler.AlwaysSampler;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
+import brave.sampler.CountingSampler;
+import brave.sampler.Sampler;
 import pl.piomin.services.customer.model.Customer;
 import pl.piomin.services.customer.model.CustomerType;
 import pl.piomin.services.customer.repository.CustomerRepository;
@@ -19,7 +20,7 @@ import pl.piomin.services.customer.repository.CustomerRepository;
 public class CustomerApplication {
 	
 	public static void main(String[] args) {
-		new SpringApplicationBuilder(CustomerApplication.class).web(true).run(args);
+		new SpringApplicationBuilder(CustomerApplication.class).web(WebApplicationType.SERVLET).run(args);
 	}
 
 	@Bean
@@ -43,7 +44,7 @@ public class CustomerApplication {
 	
 	@Bean
 	public Sampler defaultSampler() {
-		return new AlwaysSampler();
+		return CountingSampler.create(1f);
 	}
 	
 }

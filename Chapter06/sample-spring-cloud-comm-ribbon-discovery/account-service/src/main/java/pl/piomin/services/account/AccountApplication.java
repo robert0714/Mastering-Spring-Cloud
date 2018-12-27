@@ -1,8 +1,8 @@
 package pl.piomin.services.account;
 
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
@@ -11,7 +11,6 @@ import pl.piomin.services.account.model.Account;
 import pl.piomin.services.account.repository.AccountRepository;
 
 @SpringBootApplication
-@EnableDiscoveryClient
 public class AccountApplication {
 
 	@LoadBalanced
@@ -21,7 +20,7 @@ public class AccountApplication {
 	}
 	
 	public static void main(String[] args) {
-		new SpringApplicationBuilder(AccountApplication.class).web(true).run(args);
+		new SpringApplicationBuilder(AccountApplication.class).web(WebApplicationType.SERVLET).run(args);
 	}
 	
 	@Bean

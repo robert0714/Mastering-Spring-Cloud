@@ -1,14 +1,15 @@
 package pl.piomin.services.order;
 
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
-import org.springframework.cloud.sleuth.Sampler;
-import org.springframework.cloud.sleuth.sampler.AlwaysSampler;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
+import brave.sampler.CountingSampler;
+import brave.sampler.Sampler;
 import pl.piomin.services.order.repository.OrderRepository;
 
 @SpringBootApplication
@@ -17,7 +18,7 @@ import pl.piomin.services.order.repository.OrderRepository;
 public class OrderApplication {
 	
 	public static void main(String[] args) {
-		new SpringApplicationBuilder(OrderApplication.class).web(true).run(args);
+		new SpringApplicationBuilder(OrderApplication.class).web(WebApplicationType.SERVLET).run(args);
 	}
 	
 	@Bean
@@ -37,7 +38,7 @@ public class OrderApplication {
 	
 	@Bean
 	public Sampler defaultSampler() {
-		return new AlwaysSampler();
+		return CountingSampler.create(1f);
 	}
 	
 }

@@ -1,13 +1,14 @@
 package pl.piomin.services.gateway;
 
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
-import org.springframework.cloud.sleuth.Sampler;
-import org.springframework.cloud.sleuth.sampler.AlwaysSampler;
+import org.springframework.cloud.netflix.zuul.EnableZuulProxy; 
 import org.springframework.context.annotation.Bean;
 
+import brave.sampler.CountingSampler;
+import brave.sampler.Sampler;
 import pl.piomin.services.gateway.fallback.AccountFallbackProvider;
 import pl.piomin.services.gateway.filter.AddResponseIDHeaderFilter;
 
@@ -17,7 +18,7 @@ import pl.piomin.services.gateway.filter.AddResponseIDHeaderFilter;
 public class GatewayApplication {
 	
 	public static void main(String[] args) {
-		new SpringApplicationBuilder(GatewayApplication.class).web(true).run(args);
+		new SpringApplicationBuilder(GatewayApplication.class).web(WebApplicationType.SERVLET).run(args);
 	}
 
 	@Bean
@@ -32,7 +33,7 @@ public class GatewayApplication {
 	
 	@Bean
 	public Sampler defaultSampler() {
-		return new AlwaysSampler();
+		return CountingSampler.create(1f);
 	}
 	
 }

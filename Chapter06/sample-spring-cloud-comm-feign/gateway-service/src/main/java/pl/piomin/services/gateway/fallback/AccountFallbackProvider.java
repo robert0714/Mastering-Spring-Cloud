@@ -20,83 +20,50 @@ public class AccountFallbackProvider implements FallbackProvider {
 	public String getRoute() {
 		return "account-service";
 	}
+ 
 
 	@Override
-	public ClientHttpResponse fallbackResponse(Throwable cause) {
+	public ClientHttpResponse fallbackResponse(String route, Throwable cause) {
 		return new ClientHttpResponse() {
-			
+
 			@Override
 			public HttpHeaders getHeaders() {
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                return headers;
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.APPLICATION_JSON);
+				return headers;
 			}
-			
+
 			@Override
 			public InputStream getBody() throws IOException {
-				AccountFallbackResponse response = new AccountFallbackResponse("1.2", cause.getMessage());
-				return new ByteArrayInputStream(new ObjectMapper().writeValueAsBytes(response));
+				if (cause == null) {
+					return new ByteArrayInputStream("{\"status\":\"200\"}".getBytes());
+				} else {
+					AccountFallbackResponse response = new AccountFallbackResponse("1.2", cause.getMessage());
+					return new ByteArrayInputStream(new ObjectMapper().writeValueAsBytes(response));
+				}
+				
 			}
-			
+
 			@Override
 			public String getStatusText() throws IOException {
 				return "OK";
 			}
-			
+
 			@Override
 			public HttpStatus getStatusCode() throws IOException {
 				return HttpStatus.OK;
 			}
-			
+
 			@Override
 			public int getRawStatusCode() throws IOException {
 				return 200;
 			}
-			
+
 			@Override
 			public void close() {
-				
+
 			}
-			
-		};
-	}
-	
-	@Override
-	public ClientHttpResponse fallbackResponse() {
-		return new ClientHttpResponse() {
-			
-			@Override
-			public HttpHeaders getHeaders() {
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                return headers;
-			}
-			
-			@Override
-			public InputStream getBody() throws IOException {
-				return new ByteArrayInputStream("{\"status\":\"200\"}".getBytes());
-			}
-			
-			@Override
-			public String getStatusText() throws IOException {
-				return "OK";
-			}
-			
-			@Override
-			public HttpStatus getStatusCode() throws IOException {
-				return HttpStatus.OK;
-			}
-			
-			@Override
-			public int getRawStatusCode() throws IOException {
-				return 200;
-			}
-			
-			@Override
-			public void close() {
-				
-			}
-			
+
 		};
 	}
 

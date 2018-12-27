@@ -1,5 +1,6 @@
 package pl.piomin.services.order;
 
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -20,7 +21,7 @@ public class OrderApplication {
 	}
 	
 	public static void main(String[] args) {
-		new SpringApplicationBuilder(OrderApplication.class).web(true).run(args);
+		new SpringApplicationBuilder(OrderApplication.class).web(WebApplicationType.SERVLET).run(args);
 	}
 	
 	@Bean
