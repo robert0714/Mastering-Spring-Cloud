@@ -23,6 +23,8 @@
 **/**/log*
 
 **/**/target/
+.attach_pid*
+**/**/.attach_pid*
 
 
 # Windows image file caches
